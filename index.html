@@ -325,12 +325,30 @@
             position: fixed;
             top: 20px;
             right: 20px;
+            left: 20px;
+            max-width: 400px;
+            margin: 0 auto;
             background: #1ee2e7;
             color: #fff;
-            padding: 10px 20px;
-            border-radius: 4px;
+            padding: 15px 20px;
+            border-radius: 8px;
             display: none;
-            z-index: 2000;
+            z-index: 3000;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            text-align: center;
+            font-size: 14px;
+            word-wrap: break-word;
+        }
+
+        @media (max-width: 480px) {
+            .notification {
+                top: 10px;
+                left: 10px;
+                right: 10px;
+                padding: 12px 15px;
+                font-size: 12px;
+                max-width: none;
+            }
         }
         
         /* Contact Section Styles */
@@ -366,17 +384,133 @@
         ul.social-buttons li a:hover, ul.social-buttons li a:focus, ul.social-buttons li a:active { background-color: #1ee2e7; }
         ::selection { text-shadow: none; background: #1ee2e7; }
         
+        /* Burger Menu Styles */
+        .burger-menu {
+            display: none;
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            z-index: 2000;
+            background: #1ee2e7;
+            border: none;
+            padding: 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        .burger-menu span {
+            display: block;
+            width: 25px;
+            height: 3px;
+            background: #fff;
+            margin: 5px 0;
+            transition: 0.3s;
+        }
+        .burger-menu.active span:nth-child(1) { transform: rotate(-45deg) translate(-5px, 6px); }
+        .burger-menu.active span:nth-child(2) { opacity: 0; }
+        .burger-menu.active span:nth-child(3) { transform: rotate(45deg) translate(-5px, -6px); }
+
         /* Responsive styles */
         @media (max-width: 768px) {
-            .navbar { width: 95%; }
-            .navbar__link { padding: 1rem 0.8rem; font-size: 0.9rem; }
-            .navbar__link i { margin-right: 0.3rem; }
+            .burger-menu { display: block; }
+            .navbar {
+                position: fixed;
+                top: 0;
+                left: -100%;
+                width: 80%;
+                max-width: 300px;
+                height: 100vh;
+                flex-direction: column;
+                background: #fff;
+                box-shadow: 2px 0 20px rgba(0,0,0,0.3);
+                transition: left 0.3s ease;
+                padding: 80px 0 20px;
+                border-radius: 0;
+                transform: translateX(0);
+            }
+            .navbar.active { left: 0; }
+            .navbar__menu {
+                flex-direction: column;
+                width: 100%;
+                align-items: stretch;
+            }
+            .navbar__item { width: 100%; }
+            .navbar__link {
+                width: 100%;
+                padding: 1.2rem 1.5rem;
+                justify-content: flex-start;
+                border-radius: 0;
+            }
+            .navbar__item:hover .navbar__link { border-radius: 0; }
+
+            /* Header responsive */
+            header .intro-text { padding-top: 80px !important; padding-bottom: 40px !important; }
+            header .intro-text .intro-lead-in { font-size: 18px !important; line-height: 24px !important; }
+            header .intro-text .intro-heading { font-size: 32px !important; line-height: 38px !important; }
+
+            /* Category titles responsive */
+            .col-md-4 h2 { font-size: 32px !important; margin: 20px 0 10px !important; }
+            .col-md-4 p { font-size: 14px !important; }
+
+            /* Section padding */
+            section { padding: 60px 0 !important; }
+            section h2.section-heading { font-size: 28px !important; }
+            section h3.section-subheading { font-size: 14px !important; margin-bottom: 40px !important; }
+
+            /* Cart table responsive */
+            .cart-table { font-size: 12px; }
+            .cart-table th, .cart-table td { padding: 8px 5px; }
+            .cart-minus-btn, .cart-plus-btn { width: 25px !important; height: 25px !important; font-size: 14px; }
+
+            /* Buttons responsive */
+            .btn-xl {
+                padding: 15px 30px !important;
+                font-size: 16px !important;
+            }
+            .checkout-btn {
+                width: 100%;
+                padding: 15px !important;
+                font-size: 16px !important;
+            }
+        }
+
+        /* Tablette styles */
+        @media (max-width: 992px) and (min-width: 769px) {
+            .navbar { width: 90%; }
+            section { padding: 80px 0 !important; }
+            #collections .portfolio-link { max-width: 350px; height: 350px; }
+        }
+
+        @media (max-width: 480px) {
+            header .intro-text .intro-heading { font-size: 28px !important; line-height: 32px !important; }
+            .col-md-4 h2 { font-size: 24px !important; }
+            section h2.section-heading { font-size: 24px !important; }
+            .cart-table { display: block; overflow-x: auto; }
+
+            /* Product cards on mobile */
+            #collections .portfolio-link { max-width: 100%; height: 350px; }
+            #collections .portfolio-back { padding: 15px; font-size: 13px; }
+            #collections .portfolio-back h4 { font-size: 18px; }
+            #collections .portfolio-back .price { font-size: 16px; }
+            #collections .portfolio-back ul li { font-size: 12px; margin: 5px 0; }
+
+            /* Footer responsive */
+            footer { padding: 20px 0; }
+            footer .col-md-4 { margin-bottom: 15px; }
+            ul.social-buttons li { display: inline-block; }
         }
     </style>
 </head>
 <body id="page-top" class="index">
+    <!-- Burger Menu Button -->
+    <button class="burger-menu" id="burgerMenu" aria-label="Menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
     <!-- Navigation -->
-    <nav class="navbar">
+    <nav class="navbar" id="navbar">
         <ul class="navbar__menu">
             <li class="navbar__item active">
                 <a href="#page-top" class="navbar__link">
@@ -394,25 +528,25 @@
                 <a href="#collections" class="navbar__link">
                     <i class="fa fa-th-large"></i>
                     <span>Collections</span>
-                </a>        
+                </a>
             </li>
             <li class="navbar__item">
                 <a href="#about" class="navbar__link">
                     <i class="fa fa-info-circle"></i>
                     <span>About Us</span>
-                </a>        
+                </a>
             </li>
             <li class="navbar__item">
                 <a href="#cart" class="navbar__link">
                     <i class="fa fa-shopping-cart"></i>
                     <span>Cart</span>
-                </a>        
+                </a>
             </li>
             <li class="navbar__item">
                 <a href="#contact" class="navbar__link">
                     <i class="fa fa-envelope"></i>
                     <span>Contact</span>
-                </a>        
+                </a>
             </li>
         </ul>
     </nav>
@@ -505,7 +639,7 @@
                     <div class="portfolio-link">
                         <div class="portfolio-card">
                             <div class="portfolio-front">
-                                <img src="https://images.unsplash.com/photo-1603487742131-4160ec999306?fit=crop&w=400&h=400" class="img-responsive" alt="Comfort Slides">
+                                <img src="https://images.unsplash.com/photo-1603487742131-4160ec999306?fit=crop&w=400&h=400&q=80" class="img-responsive" alt="Comfort Slides">
                             </div>
                             <div class="portfolio-back">
                                 <h4>Comfort Slides</h4>
@@ -625,7 +759,7 @@
                     <div class="portfolio-link">
                         <div class="portfolio-card">
                             <div class="portfolio-front">
-                                <img src="https://images.unsplash.com/photo-1612295892167-72af3cef16f2?fit=crop&w=400&h=400" class="img-responsive" alt="Beach Sandals">
+                                <img src="https://images.unsplash.com/photo-1603487742131-4160ec999306?fit=crop&w=400&h=400&q=80" class="img-responsive" alt="Beach Sandals">
                             </div>
                             <div class="portfolio-back">
                                 <h4>Beach Sandals</h4>
@@ -786,7 +920,32 @@
                     this.classList.add('active');
                 });
             });
-            
+
+            // Burger menu functionality
+            const burgerMenu = document.getElementById('burgerMenu');
+            const navbar = document.getElementById('navbar');
+
+            burgerMenu.addEventListener('click', function() {
+                this.classList.toggle('active');
+                navbar.classList.toggle('active');
+            });
+
+            // Close menu when clicking on a link
+            document.querySelectorAll('.navbar__link').forEach(link => {
+                link.addEventListener('click', function() {
+                    burgerMenu.classList.remove('active');
+                    navbar.classList.remove('active');
+                });
+            });
+
+            // Close menu when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!navbar.contains(e.target) && !burgerMenu.contains(e.target)) {
+                    burgerMenu.classList.remove('active');
+                    navbar.classList.remove('active');
+                }
+            });
+
             // Smooth scrolling for page links
             document.querySelectorAll('a.page-scroll, a.navbar__link').forEach(link => {
                 link.addEventListener('click', function(e) {
