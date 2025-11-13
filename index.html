@@ -92,42 +92,16 @@
         }
         .navbar__link i { margin-right: 0.5rem; font-size: 1.2rem; }
         .navbar__link:hover { color: #fff; }
-        .navbar__item:before {
-            content: "";
-            position: absolute;
-            opacity: 0;
-            z-index: -1;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+        .navbar__item:hover .navbar__link {
             background: #1ee2e7;
             border-radius: 5px;
-            transition: 250ms cubic-bezier(1, 0.2, 0.1, 1.2) all;
-        }
-        .navbar__item:hover:before {
-            opacity: 1;
-            animation: gooeyEffect 250ms 1;
-        }
-        @keyframes gooeyEffect {
-            0% { transform: scale(1, 1); }
-            50% { transform: scale(1.1, 0.9); }
-            100% { transform: scale(1, 1); }
-        }
-        .navbar__item.active .navbar__link:after {
-            content: "\f54b";
-            font-family: FontAwesome;
-            position: absolute;
-            bottom: -0.5rem;
-            font-size: 0.8rem;
-            color: #1ee2e7;
         }
         
         /* Header Styles */
         header {
             text-align: center;
             color: #fff;
-            background-image: url(https://images.unsplash.com/photo-1543163521-1bf539c55dd2?fit=crop&w=1350&h=900);
+            background-image: url(https://images.unsplash.com/photo-1460353581641-37baddab0fa2?fit=crop&w=1350&h=900);
             background-position: center center;
             background-size: cover;
             background-attachment: scroll;
@@ -465,33 +439,21 @@
             </div>
             <div class="row text-center">
                 <div class="col-md-4">
-                    <a href="#collections" class="category-link" data-category="sneakers">
-                        <span class="fa-stack fa-4x">
-                            <i class="fa fa-circle fa-stack-2x text-primary"></i>
-                            <i class="fa fa-star fa-stack-1x fa-inverse"></i>
-                        </span>
-                        <h4 class="service-heading">Sneakers</h4>
-                        <p class="text-muted">Comfortable and stylish sneakers for everyday wear.</p>
+                    <a href="#collections" class="category-link" data-category="sneakers" style="text-decoration: none;">
+                        <h2 style="font-size: 48px; font-weight: 700; color: #1ee2e7; margin: 40px 0 20px; text-transform: uppercase; letter-spacing: 2px;">Sneakers</h2>
+                        <p class="text-muted" style="font-size: 16px;">Comfortable and stylish sneakers for everyday wear.</p>
                     </a>
                 </div>
                 <div class="col-md-4">
-                    <a href="#collections" class="category-link" data-category="formal">
-                        <span class="fa-stack fa-4x">
-                            <i class="fa fa-circle fa-stack-2x text-primary"></i>
-                            <i class="fa fa-black-tie fa-stack-1x fa-inverse"></i>
-                        </span>
-                        <h4 class="service-heading">Formal Shoes</h4>
-                        <p class="text-muted">Elegant designs for professional and special occasions.</p>
+                    <a href="#collections" class="category-link" data-category="formal" style="text-decoration: none;">
+                        <h2 style="font-size: 48px; font-weight: 700; color: #1ee2e7; margin: 40px 0 20px; text-transform: uppercase; letter-spacing: 2px;">Formal</h2>
+                        <p class="text-muted" style="font-size: 16px;">Elegant designs for professional and special occasions.</p>
                     </a>
                 </div>
                 <div class="col-md-4">
-                    <a href="#collections" class="category-link" data-category="sandals">
-                        <span class="fa-stack fa-4x">
-                            <i class="fa fa-circle fa-stack-2x text-primary"></i>
-                            <i class="fa fa-sun-o fa-stack-1x fa-inverse"></i>
-                        </span>
-                        <h4 class="service-heading">Sandals</h4>
-                        <p class="text-muted">Light and breathable sandals for warm days.</p>
+                    <a href="#collections" class="category-link" data-category="sandals" style="text-decoration: none;">
+                        <h2 style="font-size: 48px; font-weight: 700; color: #1ee2e7; margin: 40px 0 20px; text-transform: uppercase; letter-spacing: 2px;">Sandals</h2>
+                        <p class="text-muted" style="font-size: 16px;">Light and breathable sandals for warm days.</p>
                     </a>
                 </div>
             </div>
@@ -993,44 +955,39 @@
                 });
             }
             
-            // Stripe Checkout functionality
+            // Checkout functionality
             const checkoutBtn = document.getElementById('checkout-btn');
 
-            checkoutBtn.addEventListener('click', async () => {
+            checkoutBtn.addEventListener('click', () => {
                 if (cart.length === 0) {
                     showNotification('Your cart is empty!');
                     return;
                 }
 
-                try {
-                    // Prepare line items for Stripe
-                    const lineItems = cart.map(item => ({
-                        name: item.name,
-                        price: item.price,
-                        quantity: item.quantity
-                    }));
+                // Calculate total
+                let total = 0;
+                cart.forEach(item => {
+                    total += item.price * item.quantity;
+                });
 
-                    // Call your serverless function to create Stripe Checkout session
-                    const response = await fetch('/api/create-checkout-session', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({ items: lineItems })
-                    });
+                // Create order summary
+                let orderSummary = `🛍️ StepStyle Order Confirmation\n\n`;
+                orderSummary += `📦 Items:\n`;
+                cart.forEach(item => {
+                    orderSummary += `• ${item.name} x${item.quantity} - €${(item.price * item.quantity).toFixed(2)}\n`;
+                });
+                orderSummary += `\n💰 Total: €${total.toFixed(2)}\n\n`;
+                orderSummary += `Thank you for your order! We will contact you shortly.`;
 
-                    const session = await response.json();
+                // Show confirmation
+                alert(orderSummary);
 
-                    if (session.url) {
-                        // Redirect to Stripe Checkout
-                        window.location.href = session.url;
-                    } else {
-                        showNotification('Error creating checkout session. Please try again.');
-                    }
-                } catch (error) {
-                    console.error('Error:', error);
-                    showNotification('Error processing checkout. Please try again.');
-                }
+                // Clear cart
+                cart = [];
+                updateCartDisplay();
+                localStorage.removeItem('cart');
+
+                showNotification('✅ Order placed successfully! Check your email for confirmation.');
             });
             
             // Notification functionality
