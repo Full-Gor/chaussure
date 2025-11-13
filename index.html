@@ -955,39 +955,50 @@
                 });
             }
             
-            // Checkout functionality
+            // Stripe Checkout functionality
             const checkoutBtn = document.getElementById('checkout-btn');
 
-            checkoutBtn.addEventListener('click', () => {
+            checkoutBtn.addEventListener('click', async () => {
                 if (cart.length === 0) {
                     showNotification('Your cart is empty!');
                     return;
                 }
 
-                // Calculate total
-                let total = 0;
-                cart.forEach(item => {
-                    total += item.price * item.quantity;
-                });
+                try {
+                    showNotification('Processing your order...');
 
-                // Create order summary
-                let orderSummary = `🛍️ StepStyle Order Confirmation\n\n`;
-                orderSummary += `📦 Items:\n`;
-                cart.forEach(item => {
-                    orderSummary += `• ${item.name} x${item.quantity} - €${(item.price * item.quantity).toFixed(2)}\n`;
-                });
-                orderSummary += `\n💰 Total: €${total.toFixed(2)}\n\n`;
-                orderSummary += `Thank you for your order! We will contact you shortly.`;
+                    // Prepare line items for Stripe
+                    const lineItems = cart.map(item => ({
+                        name: item.name,
+                        price: item.price,
+                        quantity: item.quantity
+                    }));
 
-                // Show confirmation
-                alert(orderSummary);
+                    // Call serverless function to create Stripe Checkout session
+                    const response = await fetch('/api/create-checkout-session', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ items: lineItems })
+                    });
 
-                // Clear cart
-                cart = [];
-                updateCartDisplay();
-                localStorage.removeItem('cart');
+                    if (!response.ok) {
+                        throw new Error('Failed to create checkout session');
+                    }
 
-                showNotification('✅ Order placed successfully! Check your email for confirmation.');
+                    const session = await response.json();
+
+                    if (session.url) {
+                        // Redirect to Stripe Checkout
+                        window.location.href = session.url;
+                    } else {
+                        throw new Error('No checkout URL received');
+                    }
+                } catch (error) {
+                    console.error('Checkout error:', error);
+                    showNotification('❌ Error: Please configure Stripe keys in Vercel. Check console for details.');
+                }
             });
             
             // Notification functionality
