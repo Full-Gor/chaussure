@@ -1,0 +1,12 @@
+{
+  "name": "chaussure",
+  "version": "1.0.0",
+  "description": "StepStyle - Premium Footwear E-commerce",
+  "main": "index.html",
+  "dependencies": {
+    "stripe": "^14.0.0"
+  },
+  "scripts": {
+    "dev": "vercel dev"
+  }
+}
